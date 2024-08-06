@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Collider),typeof(Rigidbody))]
 public class Move : MonoBehaviour
@@ -20,9 +18,15 @@ public class Move : MonoBehaviour
     {
         float speed = Input.GetKey(runKey) ? runSpeed : walkSpeed;
 
-        float inputX = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-        float inputZ = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+        float inputX = Input.GetAxis("Horizontal");
+        float inputZ = Input.GetAxis("Vertical");
 
-        rb.transform.Translate(inputX, 0, inputZ);
+        Vector3 movementInput = new Vector3(inputX, 0, inputZ).normalized * speed;
+
+        Vector3 movementDirection = transform.TransformDirection(movementInput);
+
+        rb.velocity = new Vector3(movementDirection.x, rb.velocity.y, movementDirection.z);
+
+        //rb.AddForce(movementDirection, ForceMode.Acceleration);
     }
 }

@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
 
 public class TimerScript : MonoBehaviour
 {
@@ -27,6 +25,11 @@ public class TimerScript : MonoBehaviour
             timer += Time.deltaTime;
         }
 
+        int minutes = Mathf.FloorToInt(timer / 60f);
+        int seconds = Mathf.FloorToInt(timer % 60f);
+
+        string formattedTime = string.Format("{0:00}:{1:00}", minutes, seconds);
+
         if (isTimerSet && !startPlatform.PlayerInsideZone())
         {
             StartTimer();
@@ -40,12 +43,12 @@ public class TimerScript : MonoBehaviour
             ResetTimer();
         }
 
-        UpdateUI();
+        UpdateUI(formattedTime);
     }
 
-    public void UpdateUI()
+    public void UpdateUI(string time)
     {
-        timerText.text = $"Time: {timer:#.00}";
+        timerText.text = time;
     }
 
     public void ResetTimer()

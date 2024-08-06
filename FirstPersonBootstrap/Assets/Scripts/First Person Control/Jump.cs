@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class Jump : MonoBehaviour
@@ -8,8 +6,10 @@ public class Jump : MonoBehaviour
     public float jumpStrength = 5;
     public KeyCode jumpKey = KeyCode.Space;
 
+    public float groundCheckDistance = 0.1f;
+    public LayerMask groundLayer;
+
     private Rigidbody rb;
-    private bool isGrounded = true;
 
     void Start()
     {
@@ -18,25 +18,22 @@ public class Jump : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(jumpKey) && isGrounded)
+        if (Input.GetKeyDown(jumpKey) && IsGrounded())
         {
             rb.AddForce(rb.transform.up * jumpStrength, ForceMode.Impulse);
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private bool IsGrounded()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
+        return Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
     }
 
-    private void OnCollisionExit(Collision collision)
+    void OnDrawGizmos()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckDistance);
+
+        Gizmos.DrawSphere(transform.position + Vector3.down * groundCheckDistance, 0.05f);
     }
 }

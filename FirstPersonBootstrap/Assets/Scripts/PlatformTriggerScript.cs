@@ -1,15 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class PlatformTriggerScript : MonoBehaviour
 {
     private bool isPlayerInsideZone = false;
 
+    public UnityEvent PlayerEnteredTheZone;
+    public UnityEvent PlayerExitedTheZone;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            PlayerEnteredTheZone?.Invoke();
             isPlayerInsideZone = true;
         }
     }
@@ -26,6 +29,7 @@ public class PlatformTriggerScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            PlayerExitedTheZone?.Invoke();
             isPlayerInsideZone = false;
         }
     }
